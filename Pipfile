@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+python-multipart = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
