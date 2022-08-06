@@ -1,9 +1,9 @@
 import React from "react";
 
-const SignUpForm = () => {
+const JournalForm = () => {
     return (
         ""
     );
 };
 
-export default Header;
+export default JournalForm;

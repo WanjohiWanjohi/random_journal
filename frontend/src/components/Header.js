@@ -17,12 +17,12 @@ const Header = () => {
       </Flex>
       <Flex  align="end">
       <Flex padding="0.5rem">
-        <Link>
+        <Link href="login">
         Login
         </Link>
       </Flex>
       <Flex padding="0.5rem">
-        <Link>Sign Up</Link>
+        <Link href="signup">Sign Up</Link>
       </Flex>
       
       </Flex>
