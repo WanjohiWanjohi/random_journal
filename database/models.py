@@ -19,7 +19,7 @@ class User(Base):
 class Journal(Base):
     __tablename__ = "journals"
   
-    id = Column(UUID, primary_key=True, index=True)
+    id = Column(UUID (as_uuid=True), primary_key=True, index=True)
     content = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     owner = relationship("User", back_populates="journals")

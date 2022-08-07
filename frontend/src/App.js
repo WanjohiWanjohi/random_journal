@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import LoginForm from './components/LoginForm';
 import SignUpForm from './components/SignUpForm';
+import JournalForm from './components/JournalForm';
 function App() {
   return (
     <ChakraProvider>
@@ -15,6 +16,7 @@ function App() {
                 <Routes>
                   <Route exact path="/login" element={<LoginForm />} />
                   <Route exact path="/signup" element={<SignUpForm />} />
+                  <Route exact path="/journal" element={<JournalForm />} />
                 </Routes>
               }   
     </ChakraProvider>
