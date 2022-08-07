@@ -5,18 +5,24 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import LoginForm from './components/LoginForm';
+import Home from './components/Home';
 import SignUpForm from './components/SignUpForm';
 import JournalForm from './components/JournalForm';
+import React, { useState } from 'react';
+import JournalsToRead from './components/JournalsToRead';
 function App() {
+  const [token, setToken] = useState();
+  
   return (
     <ChakraProvider>
       <Header />
+     
       {
                 <Routes>
-                  <Route exact path="/login" element={<LoginForm />} />
-                  <Route exact path="/signup" element={<SignUpForm />} />
-                  <Route exact path="/journal" element={<JournalForm />} />
+                <Route exact path="/" element={<Home />} />
+                <Route exact path="/signup" element={<SignUpForm />} />
+                <Route exact path="/journal" element={<JournalForm />} />
+                <Route exact path="/journals-to-read" element={<JournalsToRead />} />
                 </Routes>
               }   
     </ChakraProvider>

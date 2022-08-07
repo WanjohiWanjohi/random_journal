@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Input,
   FormControl,
@@ -10,6 +10,11 @@ import {
 } from '@chakra-ui/react'
 
 const SignUpForm = () => {
+  const [email, setEmail, password, passwordChange, setPasswordChange, confirmPassword, setConfirmPassword] = useState('')
+  function handleEmailChange(event) {
+    setEmail(event.target.value)
+    console.log(email)
+  }
   return (
     <>
     <Flex margin="10" justify="center">
@@ -21,15 +26,15 @@ const SignUpForm = () => {
     </Flex>
       <FormControl isRequired>
         <FormLabel> Email</FormLabel>
-        <Input placeholder='Email' />
+        <Input placeholder='Email' type="email" />
       </FormControl>
       <FormControl isRequired>
         <FormLabel> Password</FormLabel>
-        <Input placeholder='Password' />
+        <Input placeholder='Password' type="password" />
       </FormControl>
       <FormControl isRequired>
         <FormLabel> Confirm Password</FormLabel>
-        <Input placeholder='Confirm Password' />
+        <Input placeholder='Confirm Password' type="password" />
       </FormControl>
       <FormControl >
         <Button> SignUp</Button>

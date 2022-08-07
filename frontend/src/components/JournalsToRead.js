@@ -1,6 +1,6 @@
 import React from "react";
 
-const JournalForm = () => {
+const JournalsToRead = () => {
 
     return ({
             /* if(!token) {
@@ -11,4 +11,4 @@ const JournalForm = () => {
     );
 };
 
-export default JournalForm;
+export default JournalsToRead;
