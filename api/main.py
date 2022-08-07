@@ -51,7 +51,7 @@ async def login(email: str = Form(), password: str = Form()):
     return login_token
 
 @app.post("/journal")
-async def journal(entry:Journal):
+async def write(entry:Journal):
     """_summary_
     Make a journal entry less than 500 characters long
 
@@ -60,6 +60,13 @@ async def journal(entry:Journal):
     """
     return entry.content
 
- # at last, the bottom of the file/module
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=5049)
+@app.get("/journals")
+async def journals(user:User):
+    """_summary_
+    """
+    pass
+
+@app.get("/journals/{id}")
+async def get_entry():
+    """_summary_"""
+    pass

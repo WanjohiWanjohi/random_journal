@@ -5,11 +5,12 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Home from './components/Landing';
+import Home from './components/Home';
 import SignUpForm from './components/SignUpForm';
 import Landing from './components/Landing';
 import React, { useState } from 'react';
 import JournalsToRead from './components/JournalsToRead';
+import JournalForm from './components/JournalForm';
 function App() {
   const [token, setToken] = useState();
   
@@ -23,6 +24,7 @@ function App() {
                 <Route exact path="/home" element={<Home />} />
                 <Route exact path="/signup" element={<SignUpForm />} />
                 <Route exact path="/journals-to-read" element={<JournalsToRead />} />
+                <Route exact path="/write" element={<JournalForm />} />
                 </Routes>
               }   
     </ChakraProvider>
