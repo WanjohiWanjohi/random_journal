@@ -22,4 +22,7 @@ def create_user_journal(db: Session, journal: schemas.JournalCreate, user_id: in
 def send_journal(journals, user_list):
     """
     """
+def create_login_token(user_form):
+    print(user_form)
+    
     pass

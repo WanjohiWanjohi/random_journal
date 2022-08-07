@@ -45,7 +45,7 @@ const Header = (token) => {
 
       <Flex align="end">
 
-
+        {logInMenu}
 
       </Flex>
     </Flex>

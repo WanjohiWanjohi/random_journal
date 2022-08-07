@@ -1,14 +1,17 @@
 import React from "react";
-
+import {
+  List,
+  ListItem
+} from '@chakra-ui/react'
 const OwnJournals = () => {
-    {
-        /* if(!token) {
-            return <LoginForm setToken={setToken} />
-          } */
-    }
+    
     return (
         < Container>
-            <Textarea placeholder='Here is a sample placeholder' />
+            <List spacing={3}>
+                <ListItem>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit
+                </ListItem>
+            </List>
         </Container >
 
     );

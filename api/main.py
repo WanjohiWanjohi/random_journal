@@ -2,6 +2,8 @@ from datetime import datetime
 from hashlib import new
 import uvicorn
 from typing import Union
+from auth.auth import get_current_user
+from base_models import User, Journal
 from database import functions, models, schemas
 from database.database import SessionLocal, engine
 from auth.auth import oauth2_scheme
@@ -22,22 +24,11 @@ def get_db():
         yield db
     finally:
         db.close()
-
-class User(BaseModel):
-    email: str
-    password: str
-    # journals:Union[list(Journal), None] = None    
-
-class Journal(BaseModel):
-    entry_time: datetime
-    content: Union[str, None] = None
-    owner:User
-    
-    @validator('content')
-    def entry_less_than_500(cls, v:str):
-        if len(v) > 500:
-            raise ValueError('Journal content have less than 500 characters')
-        return v
+        
+async def get_current_active_user(current_user: User = Depends(get_current_user)):
+    if current_user.disabled:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
        
 app = FastAPI()
 
@@ -56,7 +47,8 @@ async def register(user: schemas.UserCreate, db: Session = Depends(get_db), toke
 @app.post("/login/")
 async def login(email: str = Form(), password: str = Form()):
     current_user =  User(email, password)
-    return current_user
+    login_token = functions.create_login_token(current_user)
+    return login_token
 
 @app.post("/journal")
 async def journal(entry:Journal):

@@ -5,9 +5,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Home from './components/Home';
+import Home from './components/Landing';
 import SignUpForm from './components/SignUpForm';
-import JournalForm from './components/JournalForm';
+import Landing from './components/Landing';
 import React, { useState } from 'react';
 import JournalsToRead from './components/JournalsToRead';
 function App() {
@@ -19,9 +19,9 @@ function App() {
      
       {
                 <Routes>
-                <Route exact path="/" element={<Home />} />
+                <Route exact path="/" element={<Landing />} />
+                <Route exact path="/home" element={<Home />} />
                 <Route exact path="/signup" element={<SignUpForm />} />
-                <Route exact path="/journal" element={<JournalForm />} />
                 <Route exact path="/journals-to-read" element={<JournalsToRead />} />
                 </Routes>
               }   

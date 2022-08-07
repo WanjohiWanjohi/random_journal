@@ -1,9 +1,17 @@
-import { Container } from '@chakra-ui/react'
-const Home = () => {
+import React from "react";
+import { Container, Textarea, VStack } from '@chakra-ui/react'
+import JournalForm from "./JournalForm";
+const Journals = () => {
+
     return (
-        <Container maxW='container.sm' bg='green.400' color='#262626'>
-            "container.sm" Container
-        </Container>
-    )
-}
-export default Home;
+
+        <VStack>
+             <Container maxW='md' bg='blue.600' color='white'>
+                
+                <JournalForm></JournalForm>
+             </Container>
+        </VStack>
+    );
+};
+
+export default Journals;
