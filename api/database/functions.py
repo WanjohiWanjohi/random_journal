@@ -19,3 +19,7 @@ def create_user_journal(db: Session, journal: schemas.JournalCreate, user_id: in
     db.commit()
     db.refresh(db_item)
     return db_item
+def send_journal(journals, user_list):
+    """
+    """
+    pass

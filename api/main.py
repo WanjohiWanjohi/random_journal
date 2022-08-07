@@ -1,8 +1,10 @@
 from datetime import datetime
 from hashlib import new
+import uvicorn
 from typing import Union
 from database import functions, models, schemas
 from database.database import SessionLocal, engine
+from auth.auth import oauth2_scheme
 from sqlalchemy.orm import Session
 models.Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI, Depends, Form, HTTPException
@@ -10,6 +12,11 @@ from pydantic import BaseModel, ValidationError, validator
 #db Dependency
 # Dependency
 def get_db():
+    """_summary_
+        spawns a database session and closes it when released
+    Yields:
+        postgresql db session
+    """
     db = SessionLocal()
     try:
         yield db
@@ -35,7 +42,7 @@ class Journal(BaseModel):
 app = FastAPI()
 
 @app.post("/register", response_model=schemas.User)
-async def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def register(user: schemas.UserCreate, db: Session = Depends(get_db), token=Depends(oauth2_scheme)):
     """_summary_
     Register a new user
     Returns:
@@ -60,3 +67,7 @@ async def journal(entry:Journal):
         entry (Journal): Journal entry whose content is less than 500 characters long
     """
     return entry.content
+
+ # at last, the bottom of the file/module
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=5049)
