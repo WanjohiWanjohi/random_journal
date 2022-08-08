@@ -1,6 +1,6 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
+import { useFormik } from 'formik';
 import {
-  FormErrorMessage,
   Input,
   InputGroup,
   InputRightElement,
@@ -8,73 +8,104 @@ import {
   FormControl,
   FormLabel,
   Button,
-  Flex
+  Container,
 } from '@chakra-ui/react'
-import { useForm } from 'react-hook-form'
+import * as Yup from 'yup';
 import { Link } from '@chakra-ui/react'
-function handleLoginSubmit(event) {
-  event.preventDefault()
-  console.log(event.target)
-}
-const LoginForm = (setToken) => {
+import { string } from "prop-types";
+
+const LoginForm = () => {
   const [show, setShow] = React.useState(false)
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
   const handleClick = () => setShow(!show)
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm()
-  const baseUrl = process.env.BASE_URL
-  function handleEmailChange(event) {
-    setEmail(event.target.value)
+
+  function handleSubmit(event) {
+
+    event.preventDefault()
     console.log(email)
+    console.log(password)
+    let loginUrl = 'http://127.0.0.1:8000/login'
+    fetch(loginUrl, {
+      method:'POST',
+       headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({"email": email, "password": password})}
+    )
+    .then((res)=>console.log(res.json()))
   }
-  function passwordChange(val ) {setPassword(val)}
+  const formik = useFormik({
+    initialValues: {
+      pass: '',
+      email: '',
+    }, validationSchema: Yup.object({
+      pass: Yup.string()
+        .max(15, 'Must be 15 characters or less')
+        .required('Required'),
+      email: Yup.string().email('Invalid email address').required('Required'),
+
+    })
+
+  });
+ 
+
   return (
-    <Flex align="center"
-      justify="center"
-      wrap="wrap">
+    <>
+      <Container align="center"
+        justify="center"
+        wrap="wrap">
+        <form onSubmit={handleSubmit}>
+          <FormControl isRequired >
+            <FormLabel> Email</FormLabel>
+            <Input type='email' id="email" name="email" value={email} onChange={(e)=> setEmail(e.target.value)}/>
+          </FormControl>
+          {formik.errors.email ? <div>{formik.errors.email}</div> : null}
 
-      <FormControl isRequired isInvalid={errors.name}>
-        <FormLabel> Email</FormLabel>
-        <Input type='email' value={email}
-        onChange={handleEmailChange}/>
-        <FormErrorMessage>
-          {errors.name && errors.name.message}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl isRequired>
-        <FormLabel> Password</FormLabel>
-        <InputGroup size='md'>
-      <Input
-        pr='4.5rem'
-        type={show ? 'text' : 'password'}
-        placeholder='Enter password'
-      />
-      <InputRightElement width='4.5rem'  value={password}
-        onChange={passwordChange}>
-        <Button h='1.75rem' size='sm' onClick={handleClick}>
-          {show ? 'Hide' : 'Show'}
-        </Button>
-      </InputRightElement>
-    </InputGroup>
-      </FormControl>
-      <FormControl>
+          <FormControl isRequired>
+            <FormLabel> Password</FormLabel>
+            <InputGroup size='md'>
+              <Input
+                id="pass"
+                name="pass"
+                pr='4.5rem'
+                type={show ? 'text' : 'password'}
+                placeholder='Enter password'
+                value={password}
+                onChange={(e)=> setPassword(e.target.value)}
+              />
+              <InputRightElement width='4.5rem'  >
+                <Button h='1.75rem' size='sm' >
+                  {show ? 'Hide' : 'Show'}
+                </Button>
+              </InputRightElement>
 
-        <Button type="submit" onClick={handleLoginSubmit}> Login</Button>
-      </FormControl>
-      <Link color='red.500' href='#'>
-        Forgot Password
-      </Link>
-      <Text padding="0.5rem" margin="20">
-        Haven't signed up yet?
-        <Link color='teal.500' href='signup'>
-          Sign up
+            </InputGroup>
+            {formik.touched.email && formik.errors.email ? (
+              <div>{formik.errors.email}</div>
+            ) : null}
+          </FormControl>
+          <FormControl>
+            <Button type="submit"> Login</Button>
+          </FormControl>
+        </form>
+
+
+
+      </Container>
+      <Container centerContent my="3">
+        <Link color='red.500' href='#'>
+          Forgot Password
         </Link>
-      </Text>
-    </Flex>
+        <Text padding="0.5rem" margin="20">
+          Haven't signed up yet?
+          <Link color='teal.500' href='signup'>
+            Sign up
+          </Link>
+        </Text>
+      </Container>
+    </>
   );
 };
 

@@ -3,6 +3,9 @@ import { Heading, Flex } from "@chakra-ui/react";
 import { Link } from '@chakra-ui/react';
 
 const Header = (token) => {
+  function handleLogout(){
+    
+  }
   let logInMenu;
   if (token) {
     logInMenu = <>
@@ -23,7 +26,9 @@ const Header = (token) => {
         </Link>
       </Flex>
       <Flex padding="0.5rem">
-        <Link href="signup">Sign Up</Link>
+        <Link onClick={handleLogout}>
+          Logout
+        </Link>
       </Flex>
     </>
   }
@@ -39,7 +44,9 @@ const Header = (token) => {
     >
 
       <Flex align="center" mr={5}>
+      <Link href="journals-to-read">
         <Heading as="h1" size="m">Random Journal</Heading>
+        </Link>
       </Flex>
 
 
