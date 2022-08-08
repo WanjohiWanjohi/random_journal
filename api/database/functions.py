@@ -26,13 +26,24 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def create_user_journal(db: Session, journal: schemas.JournalCreate, user_id: int):
-    db_item = models.Journal(**journal.dict(), owner_id=user_id)
-    db.add(db_item)
+def create_user_journal(db: Session, journal: schemas.JournalBase):
+    """_summary_
+
+    Args:
+        db (Session): _description_
+        journal (schemas.JournalBase): _description_
+
+    Returns:
+        _type_: Journal . Created journal object
+    """
+    owner_id = get_user_by_email(db, journal.owner.email).id
+    journal_model = models.Journal(id= uuid.uuid4(), content=journal.content,owner_id=owner_id)
+    db.add(journal_model)
     # TODO : Possibility of race: optimize
     db.commit()
-    db.refresh(db_item)
-    return db_item
+    db.refresh(journal_model)
+    return journal_model
+
 def send_journal(journals, user_list):
     """_summary_
 
@@ -49,14 +60,23 @@ def read_journals(token , user_email, db: Session):
     if not token: raise ValueError("Make sure you have the correct privliges required")
     now = datetime.now()
     twenty_four_hours_ago = now - timedelta(hours=24)
-    current_user_id = db.query(models.User.id).filter(models.User.email == user_email).first()
+
+    current_user_id = get_user_by_email(db, user_email).id
     #Get all the journals written within past 24 hours
-    past_twenty_four_hours_journals = select(models.Journal).where(models.Journal.inserted_at >= twenty_four_hours_ago)
+    past_twenty_four_hours_journals = select(models.Journal).where(models.Journal.inserted_at >= twenty_four_hours_ago).where(models.Journal.owner_id == current_user_id)
     result = db.execute(past_twenty_four_hours_journals)
-    print(result)
-    # if current user has not written journal in past 24 hours, return empty list to read
-    return db.query(models.Journal.content).filter(models.Journal.owner_id != current_user_id ).all()        
+    result = [r[0] for r in result]
+    # if current user has not written journal in past 24 hours, return string
+    if len(result) == 0: return "You have not written any journals within past 24 hours so none are available for reading"
+    journals_to_read = select(models.Journal).where(models.Journal.inserted_at >= twenty_four_hours_ago).where(models.Journal.owner_id != current_user_id)
+    new_result = db.execute(journals_to_read)
+    result = [r['content'] for r in new_result]
     # return all other journals avaibale for reading
+    return  result  
+
 def create_login_token(user_form):
  
     pass
+
+
+    

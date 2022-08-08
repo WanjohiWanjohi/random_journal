@@ -12,6 +12,9 @@ models.Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI, Depends, Form, HTTPException
 from pydantic import BaseModel, ValidationError, validator
 from fastapi.middleware.cors import CORSMiddleware
+import schedule
+import time
+
 ## cors 
 origins = ["*"]
 app = FastAPI()
@@ -63,26 +66,31 @@ async def login(user:User ):
     return login_token
 
 @app.post("/journal")
-async def write(token=Depends(oauth2_scheme), db: Session = Depends(get_db) ):
+# token=Depends(oauth2_scheme)
+async def write( content:str, db: Session = Depends(get_db) ):
     """_summary_
     Make a journal entry less than 500 characters long
 
     Args:
         entry (Journal): Journal entry whose content is less than 500 characters long
     """
-    journal_text = Journal()
-    functions.create_user_journal()
-    
+    journal_text = Journal(
+        content=content,
+        entry_time=datetime.now(),
+        owner=User(email="wamuyuwanjohi97@gmail.com" ,password="sedfghjkl")
+    )
+    functions.create_user_journal(journal=journal_text, db=db)
     return journal_text
 
 @app.get("/read")
 # TODO: Replace user email
+
 async def read(token, db: Session = Depends(get_db), user_email="wamuyuwanjohi97@gmail.com"):
     """_summary_ Returns list of journal entries for a user
     """
     functions.read_journals(token , db=db, user_email=user_email)
     pass
-
+schedule.every().day.at("12:00").do(read)
 
 @app.get("/journal/{id}")
 async def read_own_journal(user:User):
@@ -96,4 +104,11 @@ async def read_own_journal(user:User):
 async def read_entry(journal_id):
     """_summary_ Returns an entry for a journal for a given user""" 
     pass
+
+while True:
+     
+    # Checks whether a scheduled task
+    # is pending to run or not
+    schedule.run_pending()
+    time.sleep(200)
 

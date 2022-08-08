@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -23,5 +24,5 @@ class Journal(Base):
     id = Column(UUID (as_uuid=True), primary_key=True, index=True)
     content = Column(String, index=True)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
-    inserted_at = Column(DateTime)
+    inserted_at = Column(DateTime,  default=datetime.now , nullable=False)
     owner = relationship("User", back_populates="journals")
