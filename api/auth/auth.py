@@ -1,6 +1,6 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import Depends, HTTPException, status
-from base_models import User, TokenData
+from base_models import User ,TokenData
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 # TODO: replace the token with an actual token
@@ -13,6 +13,12 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
+
+class UserInDB(User):
+    hashed_password: str
+    
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 fake_users_db = {
     "johndoe": {
         "username": "johndoe",
@@ -22,14 +28,18 @@ fake_users_db = {
         "disabled": False,
     }
 }
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+def get_user(db, username: str):
+    user_dict = fake_users_db.get(username)
+    if not user_dict:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    
+    user_dict = db[username]
+    return UserInDB(**user_dict)
+    
+    
 def fake_decode_token(token):
-    pass
-    return User(
-        username=token + "fakedecoded", email="john@example.com", full_name="John Doe"
-    )
+    user = get_user(fake_users_db, token)
+    return user
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(

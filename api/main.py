@@ -11,6 +11,18 @@ from sqlalchemy.orm import Session
 models.Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI, Depends, Form, HTTPException
 from pydantic import BaseModel, ValidationError, validator
+from fastapi.middleware.cors import CORSMiddleware
+## cors 
+origins = ["*"]
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 #db Dependency
 # Dependency
 def get_db():
@@ -30,10 +42,10 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
        
-app = FastAPI()
+
 
 @app.post("/register", response_model=schemas.User)
-async def register(user: schemas.UserCreate, db: Session = Depends(get_db), token=Depends(oauth2_scheme)):
+async def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     """_summary_
     Register a new user
     Returns:
@@ -44,29 +56,34 @@ async def register(user: schemas.UserCreate, db: Session = Depends(get_db), toke
             raise HTTPException(status_code=400, detail="Email already registered")
     return functions.create_user(db=db, user=user)
 
-@app.post("/login/")
-async def login(email: str = Form(), password: str = Form()):
-    current_user =  User(email, password)
+@app.post("/login")
+async def login(user:User ):
+    current_user =  user
     login_token = functions.create_login_token(current_user)
     return login_token
 
 @app.post("/journal")
-async def write(entry:Journal):
+async def write(token=Depends(oauth2_scheme), db: Session = Depends(get_db) ):
     """_summary_
     Make a journal entry less than 500 characters long
 
     Args:
         entry (Journal): Journal entry whose content is less than 500 characters long
     """
-    return entry.content
+    journal_text = Journal()
+    functions.create_user_journal()
+    
+    return journal_text
 
 @app.get("/journals")
-async def journals(user:User):
-    """_summary_
+async def journals(user:User, token=Depends(oauth2_scheme)):
+    """_summary_ Returns list of journal entries for a user
     """
+    
     pass
 
 @app.get("/journals/{id}")
-async def get_entry():
-    """_summary_"""
+async def get_entry(journal_id, token=Depends(oauth2_scheme)):
+    """_summary_ Returns an entry for a journal for a given user""" 
     pass
+

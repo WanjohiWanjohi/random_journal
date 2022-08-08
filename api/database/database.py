@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 #TODO: Use env variables
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1234@localhost:5432/testDb"
+SQLALCHEMY_DATABASE_URL = "postgresql://hzdzjucm:Q4OXUN8t99cwCOabTtnlRRPVKlR5Dyxa@tai.db.elephantsql.com/hzdzjucm"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
