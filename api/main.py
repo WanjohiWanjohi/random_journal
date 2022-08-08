@@ -75,15 +75,25 @@ async def write(token=Depends(oauth2_scheme), db: Session = Depends(get_db) ):
     
     return journal_text
 
-@app.get("/journals")
-async def journals(user:User, token=Depends(oauth2_scheme)):
+@app.get("/read")
+# TODO: Replace user email
+async def read(token, db: Session = Depends(get_db), user_email="wamuyuwanjohi97@gmail.com"):
+    """_summary_ Returns list of journal entries for a user
+    """
+    functions.read_journals(token , db=db, user_email=user_email)
+    pass
+
+
+@app.get("/journal/{id}")
+async def read_own_journal(user:User):
     """_summary_ Returns list of journal entries for a user
     """
     
     pass
 
-@app.get("/journals/{id}")
-async def get_entry(journal_id, token=Depends(oauth2_scheme)):
+
+@app.get("/read/{id}")
+async def read_entry(journal_id):
     """_summary_ Returns an entry for a journal for a given user""" 
     pass
 
