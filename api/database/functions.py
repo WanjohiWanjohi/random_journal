@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+import select
+from tkinter.tix import Select
 from sqlalchemy.orm import Session
 from . import models, schemas
 import uuid
@@ -31,9 +34,20 @@ def create_user_journal(db: Session, journal: schemas.JournalCreate, user_id: in
     db.commit()
     db.refresh(db_item)
     return db_item
-def send_journal(journals, user_list):
+def read_journals(user:schemas.UserBase, db: Session):
     """
+    Returns all journals not read in the past 24 hours 
     """
+    now = datetime.now()
+    twenty_four_hours_ago = now - timedelta(hours=24)
+    current_user_id = db.query(models.User.id).filter(models.User.email == user.email).first()
+    #Get all the journals written within past 24 hours
+    past_twenty_four_hours_journals = select(models.Journal).where(models.Journal.inserted_at >= twenty_four_hours_ago).all()
+    print(past_twenty_four_hours_journals)
+    # if current user has not written journal in past 24 hours, return empty list to read
+    return db.query(models.Journal.content).filter(models.Journal.owner_id != current_user_id ).all()        
+    # return all other journals avaibale for reading
+    
 def create_login_token(user_form):
  
     pass

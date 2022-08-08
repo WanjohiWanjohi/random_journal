@@ -86,4 +86,13 @@ async def journals(user:User, token=Depends(oauth2_scheme)):
 async def get_entry(journal_id, token=Depends(oauth2_scheme)):
     """_summary_ Returns an entry for a journal for a given user""" 
     pass
+@app.get("/read/{id}")
+async def read_journal(journal_id, token=Depends(oauth2_scheme)):
+    """_summary_ Returns an entry for a journal for a given user""" 
+    pass
+
+@app.get("/read/")
+async def read(journal_id, token=Depends(oauth2_scheme)):
+    """_summary_ Returns an entry for a journal for a given user""" 
+    functions.read_journals()
 

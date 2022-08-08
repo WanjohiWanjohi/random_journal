@@ -1,5 +1,5 @@
 import { Container } from '@chakra-ui/react'
-const Home = () => {
+const Landing = () => {
     // TODO:Finish landing page
     return ( <
         Container maxW = 'container.sm'
@@ -10,4 +10,4 @@ const Home = () => {
         </Container>
     )
 }
-export default Home;
+export default Landing;
