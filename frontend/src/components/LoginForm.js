@@ -23,9 +23,7 @@ const LoginForm = () => {
   function handleSubmit(event) {
 
     event.preventDefault()
-    console.log(email)
-    console.log(password)
-    let loginUrl = 'http://127.0.0.1:8000/login'
+    let loginUrl = 'https://3mp0sh.deta.dev/login'
     fetch(loginUrl, {
       method:'POST',
        headers: {
@@ -34,7 +32,8 @@ const LoginForm = () => {
     },
     body: JSON.stringify({"email": email, "password": password})}
     )
-    .then((res)=>console.log(res.json()))
+    .then((res)=>res.json())
+    .then((data)=>console.log(data))
   }
   const formik = useFormik({
     initialValues: {
